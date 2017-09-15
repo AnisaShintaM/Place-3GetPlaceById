@@ -28,7 +28,7 @@ import com.google.android.gms.location.places.PlaceBuffer;
 public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.PlaceViewHolder> {
 
     private Context mContext;
-    private PlaceBuffer mPlace;
+    private PlaceBuffer mPlaces;
 
     /**
      * Constructor using the context and the db cursor
@@ -36,9 +36,8 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
      * @param context the calling context/activity
      */
     public PlaceListAdapter(Context context, PlaceBuffer places) {
-        // TODO (4) Take a PlaceBuffer as an input and store it as a local private member mPlaces
         this.mContext = context;
-        this.mPlace = places;
+        this.mPlaces = places;
     }
 
     /**
@@ -64,11 +63,19 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
      */
     @Override
     public void onBindViewHolder(PlaceViewHolder holder, int position) {
-        // TODO (6) Implement onBindViewHolder to set the view holder's Name and Address text fields
-        // from the Place object at the specified position in mPlaces
+        String placeName = mPlaces.get(position).getName().toString();
+        String placeAddress = mPlaces.get(position).getAddress().toString();
+        holder.nameTextView.setText(placeName);
+        holder.addressTextView.setText(placeAddress);
     }
 
-    //TODO (7) Implement a public method swapPlaces that replaces the current mPlaces PlaceBuffer with a new one
+    public void swapPlaces(PlaceBuffer newPlaces){
+        mPlaces = newPlaces;
+        if (mPlaces != null) {
+            // Force the RecyclerView to refresh
+            this.notifyDataSetChanged();
+        }
+    }
 
     /**
      * Returns the number of items in the cursor
@@ -77,9 +84,8 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
      */
     @Override
     public int getItemCount() {
-        // TODO (5) Update getItemCount to return mPlaces's item count
-        if (mPlace==null) return 0;
-        return mPlace.getCount();
+        if(mPlaces==null) return 0;
+        return mPlaces.getCount();
     }
 
     /**
